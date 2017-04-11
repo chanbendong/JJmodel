@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1C3DE6341E88FBA50026BBF6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DE6331E88FBA50026BBF6 /* main.m */; };
+		1C3DE63F1E890F4A0026BBF6 /* NSObject+JJModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DE63E1E890F4A0026BBF6 /* NSObject+JJModel.m */; };
+		1C3DE6421E8913FE0026BBF6 /* JJClassInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DE6411E8913FE0026BBF6 /* JJClassInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		1C3DE6301E88FBA50026BBF6 /* JJModel */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = JJModel; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3DE6331E88FBA50026BBF6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1C3DE63D1E890F4A0026BBF6 /* NSObject+JJModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JJModel.h"; sourceTree = "<group>"; };
+		1C3DE63E1E890F4A0026BBF6 /* NSObject+JJModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JJModel.m"; sourceTree = "<group>"; };
+		1C3DE6401E8913FE0026BBF6 /* JJClassInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JJClassInfo.h; sourceTree = "<group>"; };
+		1C3DE6411E8913FE0026BBF6 /* JJClassInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JJClassInfo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				1C3DE6331E88FBA50026BBF6 /* main.m */,
+				1C3DE63D1E890F4A0026BBF6 /* NSObject+JJModel.h */,
+				1C3DE63E1E890F4A0026BBF6 /* NSObject+JJModel.m */,
+				1C3DE6401E8913FE0026BBF6 /* JJClassInfo.h */,
+				1C3DE6411E8913FE0026BBF6 /* JJClassInfo.m */,
 			);
 			path = JJModel;
 			sourceTree = "<group>";
@@ -120,6 +130,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C3DE6341E88FBA50026BBF6 /* main.m in Sources */,
+				1C3DE63F1E890F4A0026BBF6 /* NSObject+JJModel.m in Sources */,
+				1C3DE6421E8913FE0026BBF6 /* JJClassInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
