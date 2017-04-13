@@ -8,6 +8,47 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@protocol JJModel <NSObject>
+@optional
+
+/**
+ 如果你需要在json转对象的时候创建不同类的实例，可以使用这个基于字典的方法去选择相应的类
+ 示例:
+ + (Class)modelCustomClassForDictionary:(NSDictionary*)dictionary {
+ if (dictionary[@"radius"] != nil) {
+ return [YYCircle class];
+ } else if (dictionary[@"width"] != nil) {
+ return [YYRectangle class];
+ } else if (dictionary[@"y2"] != nil) {
+ return [YYLine class];
+ } else {
+ return [self class];
+ }
+ }
+ @param  dictionary json转成的字典
+ @return 选择的类
+ */
++ (nullable Class)modelCustomClassForDictionary:(NSDictionary *)dictionary;
+
+/**
+ 这个方法类似于 '-(BOOL)modelCustomTransformFromDictionary:(NSDictionary *)dic;'
+ 但是需要在model转换之前调用
+ 如果model实现了这个方法，他将会在'+modelWithJSON:','+modelWithDictionary:','-modelSetWithJSON:' 和 '-modelSetWithDictionary:'。
+ @param  dic json转成的字典
+ @return 选择的类
+ */
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic;
+
+/**
+ 如果默认json转model不适合你的model，实现这个方法可以使json转成model的属性,如果返回NO，转换进程将会忽略这个model
+ */
+- (BOOL)modelCustomTransformFromDictionary:(NSDictionary *)dic;
+
+@end
+
 @interface NSObject (JJModel)
 
 + (instancetype)modelWithJSON:(id)json;
@@ -25,4 +66,6 @@
  */
 - (BOOL)modelSetWithDictionary:(NSDictionary *)dic;
 
+
 @end
+NS_ASSUME_NONNULL_END

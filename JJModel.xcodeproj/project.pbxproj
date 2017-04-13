@@ -9,7 +9,10 @@
 /* Begin PBXBuildFile section */
 		1C3DE6341E88FBA50026BBF6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DE6331E88FBA50026BBF6 /* main.m */; };
 		1C3DE63F1E890F4A0026BBF6 /* NSObject+JJModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DE63E1E890F4A0026BBF6 /* NSObject+JJModel.m */; };
-		1C3DE6421E8913FE0026BBF6 /* JJClassInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DE6411E8913FE0026BBF6 /* JJClassInfo.m */; };
+		1C3DE6421E8913FE0026BBF6 /* YYClassInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DE6411E8913FE0026BBF6 /* YYClassInfo.m */; };
+		1C594A371E9F1D94004EC180 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C594A361E9F1D94004EC180 /* CoreFoundation.framework */; };
+		1C594A391E9F25C5004EC180 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C594A381E9F25C5004EC180 /* QuartzCore.framework */; };
+		1C594A3B1E9F25D4004EC180 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C594A3A1E9F25D4004EC180 /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,8 +32,11 @@
 		1C3DE6331E88FBA50026BBF6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1C3DE63D1E890F4A0026BBF6 /* NSObject+JJModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+JJModel.h"; sourceTree = "<group>"; };
 		1C3DE63E1E890F4A0026BBF6 /* NSObject+JJModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JJModel.m"; sourceTree = "<group>"; };
-		1C3DE6401E8913FE0026BBF6 /* JJClassInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JJClassInfo.h; sourceTree = "<group>"; };
-		1C3DE6411E8913FE0026BBF6 /* JJClassInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JJClassInfo.m; sourceTree = "<group>"; };
+		1C3DE6401E8913FE0026BBF6 /* YYClassInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYClassInfo.h; sourceTree = "<group>"; };
+		1C3DE6411E8913FE0026BBF6 /* YYClassInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYClassInfo.m; sourceTree = "<group>"; };
+		1C594A361E9F1D94004EC180 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		1C594A381E9F25C5004EC180 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		1C594A3A1E9F25D4004EC180 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +44,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C594A3B1E9F25D4004EC180 /* Accelerate.framework in Frameworks */,
+				1C594A391E9F25C5004EC180 /* QuartzCore.framework in Frameworks */,
+				1C594A371E9F1D94004EC180 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +58,7 @@
 			children = (
 				1C3DE6321E88FBA50026BBF6 /* JJModel */,
 				1C3DE6311E88FBA50026BBF6 /* Products */,
+				1C594A351E9F1D93004EC180 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,10 +76,20 @@
 				1C3DE6331E88FBA50026BBF6 /* main.m */,
 				1C3DE63D1E890F4A0026BBF6 /* NSObject+JJModel.h */,
 				1C3DE63E1E890F4A0026BBF6 /* NSObject+JJModel.m */,
-				1C3DE6401E8913FE0026BBF6 /* JJClassInfo.h */,
-				1C3DE6411E8913FE0026BBF6 /* JJClassInfo.m */,
+				1C3DE6401E8913FE0026BBF6 /* YYClassInfo.h */,
+				1C3DE6411E8913FE0026BBF6 /* YYClassInfo.m */,
 			);
 			path = JJModel;
+			sourceTree = "<group>";
+		};
+		1C594A351E9F1D93004EC180 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1C594A3A1E9F25D4004EC180 /* Accelerate.framework */,
+				1C594A381E9F25C5004EC180 /* QuartzCore.framework */,
+				1C594A361E9F1D94004EC180 /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,7 +151,7 @@
 			files = (
 				1C3DE6341E88FBA50026BBF6 /* main.m in Sources */,
 				1C3DE63F1E890F4A0026BBF6 /* NSObject+JJModel.m in Sources */,
-				1C3DE6421E8913FE0026BBF6 /* JJClassInfo.m in Sources */,
+				1C3DE6421E8913FE0026BBF6 /* YYClassInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +198,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -219,7 +239,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
@@ -228,6 +248,8 @@
 		1C3DE6381E88FBA50026BBF6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -235,6 +257,8 @@
 		1C3DE6391E88FBA50026BBF6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -258,6 +282,7 @@
 				1C3DE6391E88FBA50026BBF6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
