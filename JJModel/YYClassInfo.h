@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, YYEncodingType) {
     YYEncodingTypeMask       = 0xFF, ///< mask of type value
     YYEncodingTypeUnknown    = 0, ///< unknown
@@ -73,6 +75,25 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 @end
 
+@interface YYClassMethodInfo : NSObject
+
+@property (nonatomic, assign, readonly) Method method; /**<method结构体*/
+@property (nonatomic, strong, readonly) NSString *name; /**<method name*/
+@property (nonatomic, assign, readonly) SEL sel; /**<method 方法*/
+@property (nonatomic, assign, readonly) IMP imp; /**<method 实现*/
+@property (nonatomic, strong, readonly) NSString *typeEncoding; /**<method 传参及返回值*/
+@property (nonatomic, strong, readonly) NSString *returnTypeEncoding; /**<返回值类型*/
+@property (nullable, nonatomic, strong, readonly) NSArray <NSString *> *argumentTypeEncodings;/**<参数类型数组*/
+
+/**<
+    创建然后一个方法信息对象
+    @param method method结构体
+    @return A new object 出现错误则返回nil
+ */
+
+- (instancetype)initWithMethod:(Method)method;
+
+@end
 
 @interface YYClassPropertyInfo : NSObject
 
@@ -82,21 +103,50 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 @property (nonatomic, strong, readonly) NSString *typeEncoding;/**<编码值*/
 @property (nonatomic, strong, readonly) NSString *ivarName;/**<ivarName*/
 @property (nullable, nonatomic, assign, readonly) Class cls; /**<可能为nil*/
-@property (nullable, nonatomic, strong, readonly) NSArray<NSString *>protocols;/**<可能为nil*/
+@property (nullable, nonatomic, strong, readonly) NSArray<NSString *>*protocols;/**<可能为nil*/
 @property (nonatomic, assign, readonly) SEL getter;//nonnull;
 @property (nonatomic, assign, readonly) SEL setter;//nonnull;
+
+/**<
+    创建一个属性信息对象
+ @param property 属性结构体
+ @return A new object, 出现错误则返回nil
+ */
+- (instancetype)initWithProperty:(objc_property_t)property;
 
 @end
 
 @interface YYClassInfo : NSObject
 
+@property (nonatomic, assign, readonly) Class cls; /**<class 结构体*/
+@property (nullable, nonatomic, assign, readonly) Class superCls;/**<父类结构体*/
+@property (nullable, nonatomic, assign, readonly) Class metaCls; /**<元类结构体*/
+@property (nonatomic, readonly) BOOL isMeta; /**<判断是否为元类*/
+@property (nonatomic, strong, readonly) NSString *name; /**<类名*/
+@property (nullable, nonatomic, strong, readonly) YYClassInfo *superClassInfo;/**<父类classInfo*/
+@property (nullable, nonatomic, strong, readonly) NSDictionary <NSString *, YYClassIvarInfo *> *ivarInfos;/**<ivars*/
+@property (nullable, nonatomic, strong, readonly) NSDictionary <NSString *, YYClassMethodInfo *> *methodInfos;/**<methods*/
+@property (nullable, nonatomic, strong, readonly) NSDictionary <NSString *, YYClassPropertyInfo *> *propertyInfos; /**<properties*/
+
 
 /**<如果类被改变（例如添加了一个方法）你需要调用这个方法来更新类信息的缓存，调用之后，‘needUpdate’将会返回YES，然后你需要调用‘classInfoWithClass’或者‘classInfoWithClassName’来获取更新后的类信息*/
-- (BOOL)setNeedUpdate;
+- (void)setNeedUpdate;
 
 /**<如果返回的是YES，你需要调用‘classInfoWithClass’或者‘classInfoWithClassName’来获取更新后的类信息
     @return 类是否需要更新
  */
 - (BOOL)needUpdate;
 
+/**<获取特定类的classInfo
+    这个方法将会缓存类和父类信息，此方法为线程安全
+ */
+
++ (nullable instancetype)classInfoWithClass:(Class)cls;
+
+/**<获取特定类的classInfo*/
+
++ (nullable instancetype)classInfoWithClassName:(NSString *)className;
+
 @end
+
+NS_ASSUME_NONNULL_END

@@ -19,6 +19,7 @@
 @end
 
 static void SimpleObjectExample() {
+    
     YYBook *book = [YYBook modelWithJSON:@"     \
                     {                                           \
                     \"name\": \"Harry Potter\",              \
@@ -34,6 +35,10 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
 //        NSLog(@"Hello, World!");
+        NSObject *obj = [[NSObject alloc]init];
+        obj = nil;
+        
+        NSLog(@"obj : %p",obj);
         SimpleObjectExample();
     }
     return 0;

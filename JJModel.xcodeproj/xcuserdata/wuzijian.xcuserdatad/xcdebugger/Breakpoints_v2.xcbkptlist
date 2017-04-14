@@ -9,12 +9,44 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JJModel/NSObject+JJModel.m"
-            timestampString = "513759100.258492"
+            filePath = "JJModel/main.m"
+            timestampString = "513852148.136526"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "895"
-            endingLineNumber = "895"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "SimpleObjectExample()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JJModel/main.m"
+            timestampString = "513852148.136526"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "SimpleObjectExample()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JJModel/NSObject+JJModel.m"
+            timestampString = "513848686.223662"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "970"
+            endingLineNumber = "970"
             landmarkName = "-modelSetWithDictionary:"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,12 +58,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JJModel/NSObject+JJModel.m"
-            timestampString = "513759146.382415"
+            timestampString = "513850967.686422"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "906"
-            endingLineNumber = "906"
-            landmarkName = "-modelSetWithDictionary:"
+            startingLineNumber = "546"
+            endingLineNumber = "546"
+            landmarkName = "+metaWithClass:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JJModel/NSObject+JJModel.m"
-            timestampString = "513759487.103539"
+            timestampString = "513854732.339336"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "899"
-            endingLineNumber = "899"
-            landmarkName = "-modelSetWithDictionary:"
+            startingLineNumber = "943"
+            endingLineNumber = "943"
+            landmarkName = "+modelWithJSON:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -58,12 +90,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JJModel/NSObject+JJModel.m"
-            timestampString = "513759488.562794"
+            timestampString = "513854738.224486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "902"
-            endingLineNumber = "902"
-            landmarkName = "-modelSetWithDictionary:"
+            startingLineNumber = "954"
+            endingLineNumber = "954"
+            landmarkName = "+modelWithDictionary:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JJModel/NSObject+JJModel.m"
+            timestampString = "513854741.697698"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "959"
+            endingLineNumber = "959"
+            landmarkName = "+modelWithDictionary:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

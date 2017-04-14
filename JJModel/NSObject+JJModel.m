@@ -14,54 +14,7 @@
 #define msgSend(obj) ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, obj);
 
 
-/**
- Type encoding's type.
- */
-typedef NS_OPTIONS(NSUInteger, YYEncodingType) {
-    YYEncodingTypeMask       = 0xFF, ///< mask of type value
-    YYEncodingTypeUnknown    = 0, ///< unknown
-    YYEncodingTypeVoid       = 1, ///< void
-    YYEncodingTypeBool       = 2, ///< bool
-    YYEncodingTypeInt8       = 3, ///< char / BOOL
-    YYEncodingTypeUInt8      = 4, ///< unsigned char
-    YYEncodingTypeInt16      = 5, ///< short
-    YYEncodingTypeUInt16     = 6, ///< unsigned short
-    YYEncodingTypeInt32      = 7, ///< int
-    YYEncodingTypeUInt32     = 8, ///< unsigned int
-    YYEncodingTypeInt64      = 9, ///< long long
-    YYEncodingTypeUInt64     = 10, ///< unsigned long long
-    YYEncodingTypeFloat      = 11, ///< float
-    YYEncodingTypeDouble     = 12, ///< double
-    YYEncodingTypeLongDouble = 13, ///< long double
-    YYEncodingTypeObject     = 14, ///< id
-    YYEncodingTypeClass      = 15, ///< Class
-    YYEncodingTypeSEL        = 16, ///< SEL
-    YYEncodingTypeBlock      = 17, ///< block
-    YYEncodingTypePointer    = 18, ///< void*
-    YYEncodingTypeStruct     = 19, ///< struct
-    YYEncodingTypeUnion      = 20, ///< union
-    YYEncodingTypeCString    = 21, ///< char*
-    YYEncodingTypeCArray     = 22, ///< char[10] (for example)
-    
-    YYEncodingTypeQualifierMask   = 0xFF00,   ///< mask of qualifier
-    YYEncodingTypeQualifierConst  = 1 << 8,  ///< const
-    YYEncodingTypeQualifierIn     = 1 << 9,  ///< in
-    YYEncodingTypeQualifierInout  = 1 << 10, ///< inout
-    YYEncodingTypeQualifierOut    = 1 << 11, ///< out
-    YYEncodingTypeQualifierBycopy = 1 << 12, ///< bycopy
-    YYEncodingTypeQualifierByref  = 1 << 13, ///< byref
-    YYEncodingTypeQualifierOneway = 1 << 14, ///< oneway
-    
-    YYEncodingTypePropertyMask         = 0xFF0000, ///< mask of property
-    YYEncodingTypePropertyReadonly     = 1 << 16, ///< readonly
-    YYEncodingTypePropertyCopy         = 1 << 17, ///< copy
-    YYEncodingTypePropertyRetain       = 1 << 18, ///< retain
-    YYEncodingTypePropertyNonatomic    = 1 << 19, ///< nonatomic
-    YYEncodingTypePropertyWeak         = 1 << 20, ///< weak
-    YYEncodingTypePropertyCustomGetter = 1 << 21, ///< getter=
-    YYEncodingTypePropertyCustomSetter = 1 << 22, ///< setter=
-    YYEncodingTypePropertyDynamic      = 1 << 23, ///< @dynamic
-};
+
 /// Foundation Class Type
 typedef NS_ENUM (NSUInteger, YYEncodingNSType) {
     YYEncodingTypeNSUnknown = 0,
@@ -217,17 +170,52 @@ static force_inline BOOL YYEncodingTypeIsCNumber(YYEncodingType type) {
     meta->_cls = propertyInfo.cls;
     
     if (generic) {
-        meta->_hasCustomClassFromDictionary = [generic respondToSelector:@selector(modelCustomClassForDictionary:)];
+        meta->_hasCustomClassFromDictionary = [generic respondsToSelector:@selector(modelCustomClassForDictionary:)];
+        
     }else if (meta->_cls && meta->_nstype == YYEncodingTypeNSUnknown){
-        meta->_hasCustomClassFromDictionary = [meta->_cls respondToSelector:@selector(modelCustomClassForDictionary:)];
+        meta->_hasCustomClassFromDictionary = [meta->_cls respondsToSelector:@selector(modelCustomClassForDictionary:)];
     }
     
-//    if (propertyInfo.getter) {
-//        ]) {
-//            <#statements#>
-//        }
-//    }
+    if (propertyInfo.getter) {
+        if ([classInfo.cls instancesRespondToSelector:propertyInfo.getter]) {
+            meta->_getter = propertyInfo.getter;
+        }
+    }
+    if (propertyInfo.setter) {
+        if ([classInfo.cls instancesRespondToSelector:propertyInfo.setter]) {
+            meta->_setter = propertyInfo.setter;
+        }
+    }
     
+    if (meta->_getter && meta->_setter) {
+        /**<
+            KVC invalid type:
+            long double
+            pointer (such as SEL/CoreFoundation object)
+         */
+        switch (meta->_type & YYEncodingTypeMask) {
+            case YYEncodingTypeBool:
+            case YYEncodingTypeInt8:
+            case YYEncodingTypeUInt8:
+            case YYEncodingTypeInt16:
+            case YYEncodingTypeUInt16:
+            case YYEncodingTypeInt32:
+            case YYEncodingTypeUInt32:
+            case YYEncodingTypeInt64:
+            case YYEncodingTypeUInt64:
+            case YYEncodingTypeFloat:
+            case YYEncodingTypeDouble:
+            case YYEncodingTypeObject:
+            case YYEncodingTypeClass:
+            case YYEncodingTypeBlock:
+            case YYEncodingTypeStruct:
+            case YYEncodingTypeUnion: {
+                meta->_isKVCCompatible = YES;
+            } break;
+            default: break;
+        }
+    }
+    return meta;
 }
 
 @end
@@ -261,6 +249,76 @@ static force_inline BOOL YYEncodingTypeIsCNumber(YYEncodingType type) {
 
 - (instancetype)initWithClass:(Class)cls
 {
+    YYClassInfo *classInfo = [YYClassInfo classInfoWithClass:cls];
+    if (!classInfo) return nil;
+    
+    NSSet *blacklist = nil;
+    if ([cls respondsToSelector:@selector(modelPropertyBlacklist)]) {
+        NSArray *properties = [(id<JJModel>)cls modelPropertyBlacklist];
+        if (properties) {
+            blacklist = [NSSet setWithArray:properties];
+        }
+    }
+    
+    NSSet *whitelist = nil;
+    if ([cls respondsToSelector:@selector(modelPropertyWhitelist)]) {
+        NSArray *properties = [(id<JJModel>)cls modelPropertyBlacklist];
+        if (properties) {
+            whitelist = [NSSet setWithArray:properties];
+        }
+    }
+    
+    //获取容器属性
+    NSDictionary *genericMapper = nil;
+    if ([cls respondsToSelector:@selector(modelContainerPropertyGenericClass)]) {
+        genericMapper = [(id<JJModel>)cls modelContainerPropertyGenericClass];
+        if (genericMapper) {
+            NSMutableDictionary *tmp = [NSMutableDictionary new];
+            [genericMapper enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                if (![key isKindOfClass:[NSString class]]) return;
+                Class meta = object_getClass(obj);
+                if (!meta) return;
+                if (class_isMetaClass(meta)) {
+                    tmp[key] = obj;
+                }else if ([obj isKindOfClass:[NSString class]]){
+                    Class cls = NSClassFromString(obj);
+                    if (cls) {
+                        tmp[key] = cls;
+                    }
+                }
+            }];
+            genericMapper = tmp;
+        }
+    }
+    NSMutableDictionary *allPropertyMetas = [NSMutableDictionary new];
+    YYClassInfo *curClassInfo = classInfo;
+    while (curClassInfo && curClassInfo.superCls != nil) {
+        for (YYClassPropertyInfo *propertyInfo in curClassInfo.propertyInfos.allValues) {
+            if (!propertyInfo.name) continue;
+            if (!blacklist &&[blacklist containsObject:propertyInfo.name]) continue;
+            if (whitelist && ![whitelist containsObject:propertyInfo.name]) continue;
+            _YYModelPropertyMeta *meta = [_YYModelPropertyMeta metaWithClassInfo:classInfo propertyInfo:propertyInfo generic:genericMapper[propertyInfo.name]];
+            if (!meta || !meta->_name) continue;
+            if (!meta->_getter || !meta->_setter) continue;
+            if (allPropertyMetas[meta->_name]) continue;
+            allPropertyMetas[meta->_name] = meta;
+        }
+        curClassInfo = curClassInfo.superClassInfo;
+    }
+    if (allPropertyMetas.count) _allPropertyMetas = allPropertyMetas.allValues.copy;
+    
+    //创建mapper
+    NSMutableDictionary *mapper = [NSMutableDictionary new];
+    NSMutableArray *keyPathPropertyMetas = [NSMutableArray new];
+    NSMutableArray *multiKeysPropertyMetas = [NSMutableArray new];
+    
+    if ([cls respondsToSelector:@selector(modelCustomPropertyMapper)]) {
+        NSDictionary *customMapper = [(id<JJModel>)cls modelCustomPropertyMapper];
+        [customMapper enumerateKeysAndObjectsUsingBlock:^(NSString *propertyName, NSString *mappedToKey, BOOL * _Nonnull stop) {
+            
+        }];
+    }
+    
     return self;
 }
 
@@ -554,10 +612,10 @@ static force_inline void ModelSetNumberToProperty(__unsafe_unretained id model,
         lock = dispatch_semaphore_create(1);
     });
     dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
-    _JJModelMeta *meta = CFDictionaryGetValue(cache, (__bridge const void *)(cls));
+    _YYModelMeta *meta = CFDictionaryGetValue(cache, (__bridge const void *)(cls));
     dispatch_semaphore_signal(lock);
     if (!meta || meta->_classInfo.needUpdate) {
-        meta = [[_JJModelMeta alloc]initWithClass:cls];
+        meta = [[_YYModelMeta alloc] initWithClass:cls];
         if (meta) {
             dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
             CFDictionarySetValue(cache, (__bridge const void *)(cls), (__bridge const void *)(meta));
@@ -578,7 +636,7 @@ typedef struct {
 
 static void ModelSetValueForProperty(__unsafe_unretained id model,
                                      __unsafe_unretained id value,
-                                     __unsafe_unretained _JJModelPropertyMeta *meta){
+                                     __unsafe_unretained _YYModelPropertyMeta *meta){
     if (meta->_isCNumber) {
         NSNumber *num = YYNSNumberCreateFromID(value);
         ModelSetNumberToProperty(model, num, meta);
@@ -857,7 +915,7 @@ static void ModelSetValueForProperty(__unsafe_unretained id model,
                     const char *valueType = ((NSValue *)value).objCType;
                     const char *metaType = meta->_info.typeEncoding.UTF8String;
                     if (valueType && metaType && strcmp(valueType, metaType) == 0) {
-                        [model setValue:value forKey:meta->name];
+                        [model setValue:value forKey:meta->_name];
                     }
                 }
             }
@@ -888,8 +946,8 @@ static void ModelSetValueForProperty(__unsafe_unretained id model,
  */
 static void ModelSetWithDictionaryFunction(const void *_key, const void *_value, void *_context){
     ModelSetContext *context = _context;
-    __unsafe_unretained _JJModelMeta *meta = (__bridge _JJModelMeta *)(context->modelMeta);
-    __unsafe_unretained _JJModelPropertyMeta *propertyMeta = [meta->_mapper objectForKey:(__bridge id)(_key)];
+    __unsafe_unretained _YYModelMeta *meta = (__bridge _YYModelMeta *)(context->modelMeta);
+    __unsafe_unretained _YYModelPropertyMeta *propertyMeta = [meta->_mapper objectForKey:(__bridge id)(_key)];
     __unsafe_unretained id model = (__bridge id)(context->model);
     while (propertyMeta) {
         if (propertyMeta->_setter) {
@@ -905,7 +963,7 @@ static void ModelSetWithDictionaryFunction(const void *_key, const void *_value,
 static void ModelSetWithPropertyMetaArrayFunction(const void *_propertyMeta, void *_context){
     ModelSetContext *context = _context;
     __unsafe_unretained NSDictionary *dictionary = (__bridge NSDictionary *)(context->dictionary);
-    __unsafe_unretained _JJModelPropertyMeta *propertyMeta = (__bridge _JJModelPropertyMeta *)(_propertyMeta);
+    __unsafe_unretained _YYModelPropertyMeta *propertyMeta = (__bridge _YYModelPropertyMeta *)(_propertyMeta);
     if (!propertyMeta->_setter) return;
     id value = nil;
     
@@ -962,7 +1020,7 @@ static void ModelSetWithPropertyMetaArrayFunction(const void *_propertyMeta, voi
     
     Class cls = [self class];
     //获取元类对象
-    _JJModelMeta *modelMeta = [_JJModelMeta metaWithClass:cls];
+    _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:cls];
     if (modelMeta->_hasCustomClassFromDictionary) {
         cls = [cls modelCustomClassForDictionary:dictionary]?:cls;
     }
@@ -978,7 +1036,7 @@ static void ModelSetWithPropertyMetaArrayFunction(const void *_propertyMeta, voi
     if (!dic || dic == (id)kCFNull) return NO;
     if (![dic isKindOfClass:[NSDictionary class]]) return NO;
     
-    _JJModelMeta *modelMeta = [_JJModelMeta metaWithClass:object_getClass(self)];
+    _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:object_getClass(self)];
     if (modelMeta->_keyMapperCount == 0) return NO;
     
     if (modelMeta-> _hasCustomWillTransformFromDictionary) {
